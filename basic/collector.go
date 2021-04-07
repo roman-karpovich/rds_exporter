@@ -35,12 +35,36 @@ type Collector struct {
 	l        log.Logger
 }
 
+func stringInSlice(a string, list []string) bool {
+    for _, b := range list {
+        if b == a {
+            return true
+        }
+    }
+    return false
+}
+
+func filterMetrics(metrics []Metric, config *config.Config) []Metric{
+	if len(config.EnabledMetrics) == 0 {
+		return metrics
+	}
+	var filteredMetrics []Metric
+
+	for i := 0; i < len(metrics); i++ {
+		if stringInSlice(metrics[i].prometheusName, config.EnabledMetrics) {
+			filteredMetrics = append(filteredMetrics, metrics[i])
+		}
+	}
+	return filteredMetrics
+}
+
 // New creates a new instance of a Collector.
 func New(config *config.Config, sessions *sessions.Sessions) *Collector {
+	var filteredMetrics = filterMetrics(Metrics, config)
 	return &Collector{
 		config:   config,
 		sessions: sessions,
-		metrics:  Metrics,
+		metrics:  filteredMetrics,
 		l:        log.With("component", "basic"),
 	}
 }

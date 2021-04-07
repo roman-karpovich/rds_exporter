@@ -40,6 +40,7 @@ func (i Instance) String() string {
 
 // Config contains configuration file information.
 type Config struct {
+	EnabledMetrics []string 		 `yaml:"enabled_metrics"` // may be empty
 	Instances []Instance `yaml:"instances"`
 }
 
