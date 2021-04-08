@@ -4,3 +4,4 @@
 /.vscode/
 rds_exporter
 config.yml
+/vendor/
